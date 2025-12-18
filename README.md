@@ -1,836 +1,925 @@
-# PQC-DTLS 1.3 for RISC-V IoT Devices
+<p align="center">
+  <img src="https://img.shields.io/badge/Post--Quantum-Cryptography-blueviolet?style=for-the-badge&logo=shield&logoColor=white" alt="PQC"/>
+  <img src="https://img.shields.io/badge/DTLS-1.3-00ADD8?style=for-the-badge&logo=protocol&logoColor=white" alt="DTLS 1.3"/>
+  <img src="https://img.shields.io/badge/RISC--V-VexRiscv-EF2D5E?style=for-the-badge&logo=riscv&logoColor=white" alt="RISC-V"/>
+</p>
 
-A complete implementation of Post-Quantum Cryptography (PQC) enabled DTLS 1.3 for bare-metal RISC-V IoT devices, featuring Dilithium signatures and ML-KEM (Kyber) key exchange.
+<h1 align="center">
+  🔐 PQC-DTLS 1.3 for Constrained IoT Devices
+</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![RISC-V](https://img.shields.io/badge/RISC--V-VexRiscv-blue.svg)](https://github.com/SpinalHDL/VexRiscv)
-[![wolfSSL](https://img.shields.io/badge/wolfSSL-5.6+-green.svg)](https://www.wolfssl.com/)
+<p align="center">
+  <b>Quantum-Resistant Secure Communication for Bare-Metal RISC-V Embedded Systems</b>
+</p>
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="License"/>
+  <img src="https://img.shields.io/badge/wolfSSL-5.6+-blue.svg?style=flat-square" alt="wolfSSL"/>
+  <img src="https://img.shields.io/badge/LiteX-Simulation-orange.svg?style=flat-square" alt="LiteX"/>
+  <img src="https://img.shields.io/badge/NIST-Approved-success.svg?style=flat-square" alt="NIST"/>
+</p>
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [System Architecture](#system-architecture)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [1. System Dependencies](#1-system-dependencies)
-  - [2. Python Packages](#2-python-packages)
-  - [3. wolfSSL with PQC Support](#3-wolfssl-with-pqc-support)
-  - [4. Certificate Generation](#4-certificate-generation)
-- [Building the Project](#building-the-project)
-  - [Build RISC-V Firmware](#build-risc-v-firmware)
-  - [Build DTLS Server](#build-dtls-server)
-- [Running the Demo](#running-the-demo)
-  - [Quick Start (Automated)](#quick-start-automated)
-  - [Manual Execution (3 Terminals)](#manual-execution-3-terminals)
-- [Project Structure](#project-structure)
-- [Testing](#testing)
-- [Configuration](#configuration)
-- [Performance Metrics](#performance-metrics)
-- [Troubleshooting](#troubleshooting)
-- [Technical Details](#technical-details)
-- [Contributing](#contributing)
-- [References](#references)
-- [License](#license)
+<p align="center">
+  <i>🏆 Developed for Inter IIT Tech Meet 14.0 | Problem Statement by Q-trino Labs</i>
+</p>
 
 ---
 
-## Overview
-
-This project demonstrates a quantum-resistant DTLS 1.3 implementation running on a simulated RISC-V processor in a bare-metal environment. It addresses the critical challenge of securing IoT devices against future quantum computing threats while operating under severe resource constraints.
-
-**Key Achievement**: Successful mutual authentication and encrypted communication between a RISC-V IoT device and server using NIST-approved post-quantum cryptographic algorithms.
-
----
-
-## Features
-
-- ✅ **DTLS 1.3**: Latest datagram transport layer security protocol
-- ✅ **Post-Quantum Cryptography**: NIST-approved algorithms
-  - **ML-KEM (Kyber)**: Key Encapsulation Mechanism for key exchange
-  - **Dilithium**: Digital signature scheme for authentication
-- ✅ **Bare-Metal RISC-V**: No OS dependency, BIOS-level operation
-- ✅ **Mutual Authentication**: Both client and server certificate verification
-- ✅ **Resource Optimized**: Designed for constrained IoT devices
-- ✅ **LiteX Simulation**: Hardware-accurate RISC-V VexRiscv simulation
-- ✅ **Hybrid Mode**: Combines classical and PQC algorithms
+<p align="center">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" alt="C" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="Linux" width="40" height="40"/>
+</p>
 
 ---
 
-## System Architecture
+## 🌟 Highlights
+
+<table>
+<tr>
+<td width="50%">
+
+### 🛡️ Quantum-Resistant Security
+- **ML-KEM-512 (Kyber)** for key exchange
+- **Dilithium Level 2** for digital signatures  
+- NIST FIPS 203/204 compliant algorithms
+
+</td>
+<td width="50%">
+
+### 🔧 Bare-Metal Implementation
+- Zero OS dependency
+- BIOS-level operation on RISC-V
+- ~420 KB firmware footprint
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🔄 Robust Packet Handling
+- Custom chunked UDP protocol
+- CRC16 integrity verification
+- Automatic packet reassembly
+
+</td>
+<td width="50%">
+
+### 🔐 Mutual Authentication
+- Certificate-based identity verification
+- Bi-directional trust establishment
+- Production-ready security model
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [System Architecture](#-system-architecture)
+- [DTLS 1.3 Handshake Flow](#-dtls-13-handshake-flow)
+- [Chunked Middleware Protocol](#-chunked-middleware-protocol)
+- [Cryptographic Algorithms](#-cryptographic-algorithms)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Project Structure](#-project-structure)
+- [Performance Metrics](#-performance-metrics)
+- [Testing & Verification](#-testing--verification)
+- [Troubleshooting](#-troubleshooting)
+- [References](#-references)
+
+---
+
+## 🎯 Overview
+
+This project implements a **complete Post-Quantum Cryptographic (PQC) DTLS 1.3 stack** for resource-constrained IoT devices. It addresses the critical challenge of securing embedded systems against **future quantum computing threats** while operating under severe memory and computational constraints.
+
+### Key Achievement
+
+> ✅ **Successful mutual authentication and encrypted communication** between a bare-metal RISC-V IoT device and server using NIST-approved post-quantum cryptographic algorithms.
+
+### Why Post-Quantum Now?
 
 ```
-┌─────────────────────┐         ┌──────────────────┐         ┌─────────────────────┐
-│                     │  UART   │                  │   UDP   │                     │
-│  RISC-V Simulation  │◄───────►│  UART-UDP Bridge │◄───────►│   DTLS PQC Server   │
-│  (LiteX+Verilator)  │  TCP    │   (Python)       │  4444   │   (Native Binary)   │
-│                     │  1234   │                  │         │                     │
-│  - Client Firmware  │         │  - Packet        │         │  - wolfSSL          │
-│  - wolfSSL/wolfCrypt│         │    Forwarding    │         │  - PQC Algorithms   │
-│  - PQC Algorithms   │         │  - Protocol      │         │  - Certificate      │
-│  - DTLS 1.3 Client  │         │    Translation   │         │    Verification     │
-└─────────────────────┘         └──────────────────┘         └─────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                    🚨 HARVEST NOW, DECRYPT LATER                     │
+├─────────────────────────────────────────────────────────────────────┤
+│  Adversaries are collecting encrypted data TODAY that they will    │
+│  decrypt when quantum computers become available (estimated 2030)   │
+│                                                                     │
+│  IoT devices deployed NOW may still be operational when this       │
+│  threat materializes - they MUST use quantum-resistant crypto      │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Communication Flow**:
-1. RISC-V firmware initiates DTLS handshake via UART
-2. Bridge translates UART ↔ UDP packets
-3. Server performs PQC operations and responds
-4. Secure channel established with quantum-resistant cryptography
+---
+
+## 🏗️ System Architecture
+
+```
+                                    ┌──────────────────────────────────┐
+                                    │        ARCHITECTURE OVERVIEW      │
+                                    └──────────────────────────────────┘
+
+┌───────────────────────────────┐         ┌──────────────────────────────┐         ┌───────────────────────────────┐
+│                               │         │                              │         │                               │
+│   🖥️ RISC-V SIMULATION        │         │   🔄 UART-UDP BRIDGE         │         │   🌐 DTLS PQC SERVER          │
+│   (LiteX + Verilator)         │  UART   │   (Python Middleware)        │   UDP   │   (Native x86 Binary)         │
+│                               │◄───────►│                              │◄───────►│                               │
+│   ┌─────────────────────┐     │  TCP    │   ┌──────────────────────┐   │  4444   │   ┌─────────────────────┐     │
+│   │ VexRiscv CPU @ 10MHz│     │  1234   │   │ Chunked Protocol     │   │         │   │ wolfSSL 5.6+        │     │
+│   │ 100 MB RAM          │     │         │   │ ├─ Packet Framing    │   │         │   │ ├─ DTLS 1.3         │     │
+│   │ 32 KB ROM           │     │         │   │ ├─ CRC16 Validation  │   │         │   │ ├─ ML-KEM-512       │     │
+│   └─────────────────────┘     │         │   │ └─ Auto Reassembly   │   │         │   │ └─ Dilithium L2     │     │
+│                               │         │   └──────────────────────┘   │         │   └─────────────────────┘     │
+│   ┌─────────────────────┐     │         │                              │         │                               │
+│   │ DTLS 1.3 Client     │     │         │   ┌──────────────────────┐   │         │   ┌─────────────────────┐     │
+│   │ ├─ wolfSSL          │     │         │   │ Handles Large Msgs   │   │         │   │ Certificate         │     │
+│   │ ├─ PQC Algorithms   │     │         │   │ ├─ 5KB+ DTLS records │   │         │   │ ├─ CA Verification  │     │
+│   │ └─ Embedded Certs   │     │         │   │ └─ Multi-chunk split │   │         │   │ └─ Mutual Auth      │     │
+│   └─────────────────────┘     │         │   └──────────────────────┘   │         │   └─────────────────────┘     │
+│                               │         │                              │         │                               │
+└───────────────────────────────┘         └──────────────────────────────┘         └───────────────────────────────┘
+         │                                              │                                        │
+         │                                              │                                        │
+         └──────────────────────────────────────────────┴────────────────────────────────────────┘
+                                                  │
+                                    ┌─────────────▼──────────────┐
+                                    │   🔒 SECURE CHANNEL        │
+                                    │   AES-128-GCM Encrypted    │
+                                    │   Post-Quantum Protected   │
+                                    └────────────────────────────┘
+```
+
+### Component Interaction Flow
+
+```mermaid
+sequenceDiagram
+    participant C as 🔧 RISC-V Client
+    participant B as 🔄 UART Bridge
+    participant S as 🌐 DTLS Server
+    
+    Note over C,S: Phase 1: Connection Establishment
+    C->>B: UART bytes (TCP:1234)
+    B->>B: Buffer & Frame Detection
+    B->>S: Chunked UDP Datagrams
+    S->>S: Reassemble Chunks
+    
+    Note over C,S: Phase 2: DTLS 1.3 Handshake
+    C->>S: ClientHello + ML-KEM Share
+    S->>C: ServerHello + ML-KEM Ciphertext
+    S->>C: Certificate (Dilithium)
+    S->>C: CertificateVerify (Signature)
+    C->>S: Certificate (Dilithium)
+    C->>S: CertificateVerify (Signature)
+    
+    Note over C,S: Phase 3: Encrypted Communication
+    C->>S: 🔐 Application Data
+    S->>C: 🔐 Application Response
+```
 
 ---
 
-## Prerequisites
+## 🤝 DTLS 1.3 Handshake Flow
 
-### Operating System
-- **Recommended**: Ubuntu 20.04 LTS or later
-- **Alternative**: Any Linux distribution with package manager
+The handshake follows RFC 9147 (DTLS 1.3) with post-quantum cryptographic extensions:
 
-### Hardware Requirements
-- **CPU**: x86_64 processor (2+ cores recommended)
-- **RAM**: 4 GB minimum, 8 GB recommended
-- **Storage**: 2 GB free space
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                        DTLS 1.3 PQC HANDSHAKE SEQUENCE                           │
+└──────────────────────────────────────────────────────────────────────────────────┘
 
-### Required Skills
-- Basic Linux command line
-- Understanding of compilation process
-- Network concepts (UDP, ports)
+    Client (RISC-V IoT Device)                        Server (Linux Host)
+           │                                                 │
+           │                                                 │
+    ┌──────┴──────┐                                   ┌──────┴──────┐
+    │  Generate   │                                   │   Waiting   │
+    │ ML-KEM Keys │                                   │ for Client  │
+    └──────┬──────┘                                   └──────┬──────┘
+           │                                                 │
+           │  ┌─────────── ClientHello ─────────────────►   │
+           │  │  • Client Random (32 bytes)                  │
+           │  │  • Cipher Suites (TLS_AES_128_GCM_SHA256)    │
+           │  │  • ML-KEM Public Key (1184 bytes)            │
+           │  │  • Dilithium Signature Algorithms            │
+           │                                                 │
+           │  ◄─────────── ServerHello ──────────────────┐  │
+           │               • Server Random (32 bytes)    │  │
+           │               • Selected Cipher Suite       │  │
+           │               • ML-KEM Ciphertext (1088 B)  │  │
+           │                                             │  │
+           │  ◄───────── EncryptedExtensions ────────────┤  │
+           │               • (encrypted from here)       │  │
+           │                                             │  │
+           │  ◄─────────── Certificate ──────────────────┤  │
+           │               • Server Dilithium Cert       │  │
+           │               • Public Key (1952 bytes)     │  │
+           │                                             │  │
+           │  ◄────────── CertificateVerify ─────────────┤  │
+           │               • Dilithium Signature         │  │
+           │               • (3293 bytes)                │  │
+           │                                             │  │
+           │  ◄───────────── Finished ───────────────────┘  │
+           │               • Handshake MAC                   │
+           │                                                 │
+    ┌──────┴──────┐        ┌──────────────────────┐         │
+    │   Verify    │        │ Derive Session Keys  │         │
+    │   Server    │───────►│ • Client Write Key   │         │
+    │ Certificate │        │ • Server Write Key   │         │
+    └──────┬──────┘        │ • Traffic Secrets    │         │
+           │               └──────────────────────┘         │
+           │                                                 │
+           │  ───────────── Certificate ────────────────►   │
+           │               • Client Dilithium Cert          │
+           │                                                 │
+           │  ──────────── CertificateVerify ───────────►   │
+           │               • Client Signature               │
+           │                                                 │
+           │  ─────────────── Finished ─────────────────►   │
+           │                                                 │
+           │                   ┌──────────────────┐         │
+           │                   │ Verify Client &  │◄────────│
+           │                   │ Derive App Keys  │         │
+           │                   └────────┬─────────┘         │
+           │                            │                    │
+           ├────────────────────────────┼────────────────────┤
+           │                            │                    │
+           │   ═══════════════ SECURE CHANNEL ═══════════   │
+           │                            │                    │
+           │  ◄══════════ Encrypted Application Data ═════► │
+           │         (AES-128-GCM with Perfect Forward       │
+           │          Secrecy & Quantum Resistance)          │
+           │                                                 │
+    ┌──────┴──────┐                                   ┌──────┴──────┐
+    │   ✓ SECURE  │                                   │   ✓ SECURE  │
+    │  CONNECTED  │                                   │  CONNECTED  │
+    └─────────────┘                                   └─────────────┘
+```
+
+### Key Exchange Details
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   ML-KEM-512 KEY EXCHANGE                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Client                              Server                     │
+│    │                                   │                        │
+│    │  1. Generate ephemeral            │                        │
+│    │     keypair (pk, sk)              │                        │
+│    │         │                         │                        │
+│    │         │                         │                        │
+│    │  2. Send public key ─────────────►│  3. Encapsulate        │
+│    │     (1184 bytes)                  │     shared secret      │
+│    │                                   │         │              │
+│    │                                   │         │              │
+│    │  4. Receive ciphertext ◄──────────│  (1088 bytes)          │
+│    │                                   │         │              │
+│    │  5. Decapsulate to                │         │              │
+│    │     get shared secret             │         │              │
+│    │         │                         │         │              │
+│    │         ▼                         │         ▼              │
+│    │  ┌─────────────────────────────────────────────────────┐   │
+│    │  │            IDENTICAL 32-BYTE SHARED SECRET          │   │
+│    │  │     (Used as input to HKDF for session keys)        │   │
+│    │  └─────────────────────────────────────────────────────┘   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Installation
+## 🔄 Chunked Middleware Protocol
 
-### 1. System Dependencies
+### The Problem
 
-Install essential build tools and RISC-V toolchain:
+Large DTLS records (especially with PQC certificates ~5KB+) cannot be transmitted reliably over constrained UART-to-UDP bridges:
+
+```
+❌ PROBLEM: Raw transmission causes garbled data
+
+     TCP Stream (UART)              UDP Datagrams
+    ┌─────────────────┐            ┌──────────┐
+    │AAABBBCCCDDDEEE..│───────────►│AAA???????│ ← Data Lost!
+    │(continuous flow)│            │BBB???????│ ← Corrupted!
+    └─────────────────┘            │DDDEE?????│ ← Out of order!
+                                   └──────────┘
+```
+
+### The Solution: Chunked UDP Protocol
+
+We implemented a **custom framing protocol** with 16-byte headers for reliable transmission:
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                     CHUNKED UDP PROTOCOL FRAME FORMAT                     │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   Header (16 bytes)                         Payload (up to 1400 bytes)   │
+│  ┌─────────────────────────────────────────┐ ┌─────────────────────────┐ │
+│  │ Magic │ MsgID │ChunkID│ Total │ Len │CRC│ │     Actual DTLS Data    │ │
+│  │  4B   │  4B   │  2B   │  2B   │ 2B  │2B │ │                         │ │
+│  └─────────────────────────────────────────┘ └─────────────────────────┘ │
+│                                                                          │
+│  Field Descriptions:                                                     │
+│  ───────────────────                                                     │
+│  • Magic (0xCDAB1234) - Protocol identifier for validation               │
+│  • Message ID        - Unique identifier for each DTLS record            │
+│  • Chunk ID          - Current chunk number (0-indexed)                  │
+│  • Total Chunks      - Total number of chunks for this message           │
+│  • Chunk Length      - Payload size in this datagram                     │
+│  • CRC16             - Integrity checksum of payload                     │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Transmission Example
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│              5KB DTLS CERTIFICATE TRANSMISSION EXAMPLE                   │
+└──────────────────────────────────────────────────────────────────────────┘
+
+Original Message: 5000 bytes DTLS Certificate Record
+Max Chunk Size:   1400 bytes
+Chunks Required:  ⌈5000 / 1400⌉ = 4 chunks
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ CHUNK 0/3                                                              │
+│ ┌──────────────────────────┬──────────────────────────────────────┐    │
+│ │ Magic:     0xCDAB1234    │ Payload: Bytes 0-1399 of certificate │    │
+│ │ Msg ID:    42            │ (1400 bytes)                         │    │
+│ │ Chunk ID:  0             │                                      │    │
+│ │ Total:     4             │                                      │    │
+│ │ Length:    1400          │                                      │    │
+│ │ CRC16:     0xA3F2        │                                      │    │
+│ └──────────────────────────┴──────────────────────────────────────┘    │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ CHUNK 1/3                                                              │
+│ ┌──────────────────────────┬──────────────────────────────────────┐    │
+│ │ Magic:     0xCDAB1234    │ Payload: Bytes 1400-2799             │    │
+│ │ Msg ID:    42            │ (1400 bytes)                         │    │
+│ │ Chunk ID:  1             │                                      │    │
+│ │ Total:     4             │                                      │    │
+│ │ Length:    1400          │                                      │    │
+│ │ CRC16:     0x7B91        │                                      │    │
+│ └──────────────────────────┴──────────────────────────────────────┘    │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ CHUNK 2/3                                                              │
+│ ┌──────────────────────────┬──────────────────────────────────────┐    │
+│ │ Magic:     0xCDAB1234    │ Payload: Bytes 2800-4199             │    │
+│ │ Msg ID:    42            │ (1400 bytes)                         │    │
+│ │ Chunk ID:  2             │                                      │    │
+│ │ Total:     4             │                                      │    │
+│ │ Length:    1400          │                                      │    │
+│ │ CRC16:     0x2E44        │                                      │    │
+│ └──────────────────────────┴──────────────────────────────────────┘    │
+└────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────┐
+│ CHUNK 3/3 (Final)                                                      │
+│ ┌──────────────────────────┬──────────────────────────────────────┐    │
+│ │ Magic:     0xCDAB1234    │ Payload: Bytes 4200-4999             │    │
+│ │ Msg ID:    42            │ (800 bytes - final chunk)            │    │
+│ │ Chunk ID:  3             │                                      │    │
+│ │ Total:     4             │                                      │    │
+│ │ Length:    800           │                                      │    │
+│ │ CRC16:     0xD127        │                                      │    │
+│ └──────────────────────────┴──────────────────────────────────────┘    │
+└────────────────────────────────────────────────────────────────────────┘
+
+                                    ↓
+                           ┌───────────────┐
+                           │  REASSEMBLY   │
+                           │   at Server   │
+                           └───────┬───────┘
+                                   ↓
+                    ┌──────────────────────────────┐
+                    │ ✓ Complete 5000-byte record  │
+                    │   ready for DTLS processing  │
+                    └──────────────────────────────┘
+```
+
+### Reassembly State Machine
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    RECEIVER STATE MACHINE                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+                      ┌─────────────────┐
+                      │   IDLE STATE    │
+                      │ (No active msg) │
+                      └────────┬────────┘
+                               │
+                               │ Receive Chunk (Msg ID = N)
+                               ▼
+                      ┌─────────────────┐
+               ┌─────►│  RECEIVING      │◄──────┐
+               │      │ Message ID: N   │       │
+               │      │ Got: 1/4 chunks │       │
+               │      └────────┬────────┘       │
+               │               │                │
+               │               │ More chunks    │
+               │               ▼                │
+               │      ┌─────────────────┐       │
+               │      │  ACCUMULATING   │───────┘
+               │      │ Got: 2/4, 3/4   │  Still incomplete
+               │      └────────┬────────┘
+               │               │
+               │               │ Final chunk received (4/4)
+               │               ▼
+               │      ┌─────────────────┐
+               │      │   COMPLETE!     │
+               │      │ ✓ CRC verified  │
+               │      │ ✓ All chunks    │
+               │      │ → Reassemble    │
+               │      └────────┬────────┘
+               │               │
+               │               │ Return complete message
+               │               ▼
+               │      ┌─────────────────┐
+               │      │ DELIVER TO      │
+               └──────│ DTLS STACK      │
+                      │ (wolfSSL)       │
+                      └─────────────────┘
+```
+
+### Protocol Benefits
+
+| Feature | Benefit |
+|---------|---------|
+| **Magic Number** | Reject non-protocol packets |
+| **Message ID** | Track concurrent multi-message streams |
+| **Chunk ID** | Ensure correct reassembly order |
+| **Total Chunks** | Know when message is complete |
+| **CRC16** | Detect corrupted chunks |
+| **Timeout Handling** | Clean up incomplete messages |
+
+---
+
+## 🔐 Cryptographic Algorithms
+
+### Algorithm Suite
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    POST-QUANTUM CRYPTOGRAPHIC SUITE                       │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌───────────────────────────────────────────────────────────────────┐   │
+│  │                    ML-KEM-512 (Kyber)                             │   │
+│  │                    Key Encapsulation Mechanism                     │   │
+│  ├───────────────────────────────────────────────────────────────────┤   │
+│  │  Purpose:      Quantum-resistant key exchange                     │   │
+│  │  Security:     128-bit post-quantum (NIST Level 1)                │   │
+│  │  Public Key:   1,184 bytes                                        │   │
+│  │  Ciphertext:   1,088 bytes                                        │   │
+│  │  Shared Key:   32 bytes                                           │   │
+│  │  Basis:        Module Learning With Errors (MLWE)                 │   │
+│  │  Standard:     NIST FIPS 203                                      │   │
+│  └───────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ┌───────────────────────────────────────────────────────────────────┐   │
+│  │                    DILITHIUM LEVEL 2                              │   │
+│  │                    Digital Signature Scheme                        │   │
+│  ├───────────────────────────────────────────────────────────────────┤   │
+│  │  Purpose:      Quantum-resistant authentication                   │   │
+│  │  Security:     128-bit post-quantum (NIST Level 2)                │   │
+│  │  Public Key:   1,952 bytes                                        │   │
+│  │  Signature:    3,293 bytes                                        │   │
+│  │  Secret Key:   4,000 bytes                                        │   │
+│  │  Basis:        Module Lattice (Fiat-Shamir with Aborts)           │   │
+│  │  Standard:     NIST FIPS 204 (ML-DSA-44)                          │   │
+│  └───────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ┌───────────────────────────────────────────────────────────────────┐   │
+│  │                    AES-128-GCM                                    │   │
+│  │                    Symmetric Encryption                            │   │
+│  ├───────────────────────────────────────────────────────────────────┤   │
+│  │  Purpose:      Bulk data encryption + authentication             │   │
+│  │  Key Size:     128 bits                                           │   │
+│  │  Mode:         Galois/Counter Mode (AEAD)                         │   │
+│  │  IV Size:      96 bits                                            │   │
+│  │  Tag Size:     128 bits                                           │   │
+│  │  Standard:     NIST SP 800-38D                                    │   │
+│  └───────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Security Comparison
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                CLASSICAL vs POST-QUANTUM SECURITY                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   Algorithm        │ Classical Security │ Quantum Security │ Status    │
+│  ─────────────────────────────────────────────────────────────────────  │
+│   RSA-2048         │ 112 bits           │ 0 bits ⚠️        │ BROKEN     │
+│   ECDSA-256        │ 128 bits           │ 0 bits ⚠️        │ BROKEN     │
+│   ECDH-P256        │ 128 bits           │ 0 bits ⚠️        │ BROKEN     │
+│  ─────────────────────────────────────────────────────────────────────  │
+│   ML-KEM-512       │ 128 bits           │ 128 bits ✓       │ SECURE     │
+│   Dilithium L2     │ 128 bits           │ 128 bits ✓       │ SECURE     │
+│   AES-128-GCM      │ 128 bits           │ 64 bits  ✓       │ SECURE*    │
+│                                                                         │
+│   * Grover's algorithm reduces AES security by half, but AES-128        │
+│     remains computationally secure against quantum attacks              │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+
+| Requirement | Minimum Version | Purpose |
+|-------------|-----------------|---------|
+| Ubuntu/Debian | 20.04 LTS | Operating System |
+| GCC | 9.0+ | Native compilation |
+| RISC-V Toolchain | Any | Cross-compilation |
+| Python | 3.8+ | Bridge scripts |
+| Verilator | 4.0+ | RTL simulation |
+
+### Step 1: System Dependencies
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y \
+sudo apt-get update && sudo apt-get install -y \
     build-essential \
     gcc-riscv64-unknown-elf \
     binutils-riscv64-unknown-elf \
-    libtool \
-    autoconf \
-    automake \
-    python3 \
-    python3-pip \
-    git \
-    wget \
-    verilator
+    libtool autoconf automake \
+    python3 python3-pip \
+    git wget verilator
 ```
 
-**Verification**:
-```bash
-riscv64-unknown-elf-gcc --version
-# Expected: gcc (GCC) 10.x.x or later
-```
-
-### 2. Python Packages
-
-Install LiteX framework and dependencies:
+### Step 2: Python Packages
 
 ```bash
 # Core packages
 pip3 install --user meson ninja litex
 
 # LiteX components
-pip3 install --user git+https://github.com/litex-hub/pythondata-cpu-vexriscv.git
-pip3 install --user git+https://github.com/litex-hub/pythondata-software-compiler_rt.git
-pip3 install --user git+https://github.com/litex-hub/pythondata-software-picolibc.git
-pip3 install --user git+https://github.com/litex-hub/pythondata-misc-tapcfg.git
+pip3 install --user \
+    git+https://github.com/litex-hub/pythondata-cpu-vexriscv.git \
+    git+https://github.com/litex-hub/pythondata-software-compiler_rt.git \
+    git+https://github.com/litex-hub/pythondata-software-picolibc.git
+
+# Add to PATH
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
-**Add to PATH** (add to `~/.bashrc`):
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-**Verification**:
-```bash
-litex_sim --help
-# Expected: LiteX simulation command help
-```
-
-### 3. wolfSSL with PQC Support
-
-Clone and install wolfSSL with post-quantum cryptography:
+### Step 3: wolfSSL with PQC Support
 
 ```bash
-# Clone wolfSSL
-cd /usr/local/src
-sudo git clone https://github.com/wolfSSL/wolfssl.git
-sudo chown -R $USER:$USER wolfssl
-cd -
-
-# Build and install with PQC support
-sudo WOLFSSL_DIR=/usr/local/src/wolfssl ./install_wolfssl.sh
+cd Constraint_Env_SimI/Constraint_Env_Sim
+sudo ./install_wolfssl.sh
 ```
 
-**What this does**:
-- Configures wolfSSL with DTLS 1.3 support
-- Enables Dilithium signature algorithms
-- Enables ML-KEM (Kyber) key exchange
-- Installs to `/usr/local/lib` and `/usr/local/include`
+This configures wolfSSL with:
+- ✅ DTLS 1.3 support
+- ✅ Dilithium signature algorithms
+- ✅ ML-KEM (Kyber) key exchange
+- ✅ Optimizations for embedded systems
 
-**Build time**: 5-10 minutes
-
-**Verification**:
-```bash
-ls /usr/local/include/wolfssl/
-# Expected: Directory listing with wolfssl headers
-
-sudo ldconfig -v 2>/dev/null | grep wolfssl
-# Expected: libwolfssl.so.XX
-```
-
-### 4. Certificate Generation
-
-Generate PQC certificates for mutual authentication:
+### Step 4: Generate PQC Certificates
 
 ```bash
 ./generate_pqc_certs.sh
 ```
 
-**Generated files in** `pqc_certs/`:
-- `ca-dilithium-cert.pem` - Certificate Authority
-- `server-dilithium-cert.pem` - Server certificate
-- `server-dilithium-key.pem` - Server private key
-- `client-dilithium-cert.pem` - Client certificate
-- `client-dilithium-key.pem` - Client private key
-
-**Verification**:
-```bash
-ls -lh pqc_certs/
-# Expected: 5 PEM files
+**Generated files:**
+```
+pqc_certs/
+├── ca-pub.der          # Certificate Authority
+├── server-pub.der      # Server certificate (Dilithium)
+├── server-key.der      # Server private key
+├── client-pub.der      # Client certificate (Dilithium)
+└── client-key.der      # Client private key
 ```
 
 ---
 
-## Building the Project
+## 🚀 Quick Start
 
-### Build RISC-V Firmware
-
-Compile the bare-metal client firmware:
+### Automated Demo (Recommended)
 
 ```bash
-./build_firmware.sh
-```
-
-**Build Process**:
-1. Compiles `boot/main.c` with embedded wolfSSL
-2. Links with RISC-V libraries (picolibc, compiler_rt)
-3. Generates three output formats
-
-**Generated Files**:
-- `boot.bin` - Raw binary (~420 KB)
-- `boot.elf` - ELF executable with debug symbols
-- `boot.fbi` - LiteX bootable image (used by simulator)
-
-**Build Options** (modify in `boot/Makefile`):
-```makefile
-RISCV_ARCH = rv32ima    # RISC-V architecture
-RISCV_ABI = ilp32       # ABI specification
-RAM_SIZE = 0x06400000   # 100 MB RAM
-```
-
-**Verification**:
-```bash
-ls -lh boot.bin boot.elf boot.fbi
-# Expected: All three files present, ~420 KB each
-
-riscv64-unknown-elf-objdump -h boot.elf | head -20
-# Expected: ELF section headers
-```
-
-**Troubleshooting Build Errors**:
-```bash
-# If wolfssl.h not found:
-sudo ldconfig
-export C_INCLUDE_PATH=/usr/local/include:$C_INCLUDE_PATH
-export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-
-# Clean and rebuild:
-cd boot && make clean && cd ..
-./build_firmware.sh
-```
-
-### Build DTLS Server
-
-Compile the native DTLS server:
-
-```bash
-cd dtls_server
-make
-cd ..
-```
-
-**Generated Binary**:
-- `dtls_server/dtls_pqc_server` (~2.5 MB)
-
-**Verification**:
-```bash
-ldd dtls_server/dtls_pqc_server
-# Expected: Shows linked wolfSSL library
-
-./dtls_server/dtls_pqc_server --help
-# Expected: Usage information
-```
-
----
-
-## Running the Demo
-
-### Quick Start (Automated)
-
-Run the complete demonstration with a single command:
-
-```bash
+cd Constraint_Env_SimI/Constraint_Env_Sim
 ./run_demo.sh
 ```
 
-**What Happens**:
-1. ✓ Starts DTLS PQC Server (UDP port 4444)
-2. ✓ Starts LiteX RISC-V Simulation (60-75s build time)
-3. ✓ Starts UART-UDP Bridge (connects components)
-4. ✓ Monitors handshake progress
-5. ✓ Reports success or failure
-
-**Expected Output**:
+**Expected Output:**
 ```
 ════════════════════════════════════════════════════════════════
-  DTLS 1.3 Post-Quantum Cryptography Demo
+   🔐 DTLS 1.3 Post-Quantum Cryptography Demo
 ════════════════════════════════════════════════════════════════
 
 [+] Starting DTLS PQC Server...
-[+] Starting LiteX RISC-V Simulation...
-    Building simulation (this takes 60-75 seconds)...
+[+] Building LiteX RISC-V Simulation (60-75s)...
 [+] Starting UART-UDP Bridge...
 [+] Monitoring handshake...
 
 [Server] Received ClientHello
 [Server] Sending ServerHello with ML-KEM parameters
-[Server] Certificate verification in progress...
-[Server] ✓ Client certificate verified
+[Server] ✓ Client certificate verified (Dilithium)
 [Server] Computing ML-KEM shared secret...
 [Server] ✓ Session keys derived
-[Server] DTLS 1.3 handshake complete
 
+════════════════════════════════════════════════════════════════
 ✓✓✓ SUCCESS! DTLS 1.3 Post-Quantum Handshake Completed ✓✓✓
+════════════════════════════════════════════════════════════════
 
 Cryptographic Details:
-  • Key Exchange: ML-KEM-768 (Kyber)
-  • Signatures: Dilithium3
+  • Key Exchange: ML-KEM-512 (Kyber)
+  • Signatures:   Dilithium Level 2
   • Cipher Suite: TLS_AES_128_GCM_SHA256
-  • Authentication: Mutual (Client + Server)
+  • Auth Mode:    Mutual (Certificate-based)
 
-Total Time: 98 seconds
+Total Time: ~90 seconds
 ```
-
-**Runtime**: 90-120 seconds
-**Logs Saved To**: `logs/` directory
 
 ### Manual Execution (3 Terminals)
 
-For debugging or demonstration, run components separately:
-
-#### Terminal 1: DTLS Server
-
+**Terminal 1 - DTLS Server:**
 ```bash
 cd dtls_server
 ./dtls_pqc_server
 ```
 
-**Expected Output**:
-```
-═══════════════════════════════════════════════════════
-  DTLS 1.3 Server with Post-Quantum Cryptography
-═══════════════════════════════════════════════════════
-
-Configuration:
-  • Port: 4444 (UDP)
-  • Certificates: pqc_certs/
-  • Algorithms: Dilithium + ML-KEM
-
-[Server] wolfSSL initialized
-[Server] Certificates loaded
-[Server] Listening on UDP port 4444...
-```
-
-**Leave this running** and proceed to Terminal 2.
-
-#### Terminal 2: LiteX RISC-V Simulation
-
-Wait 10 seconds after starting server, then:
-
+**Terminal 2 - LiteX Simulation:**
 ```bash
 litex_sim \
-    --csr-json csr.json \
     --cpu-type=vexriscv \
     --cpu-variant=full \
     --integrated-main-ram-size=0x06400000 \
     --ram-init=boot.fbi
 ```
 
-**Expected Output** (first 60-75 seconds):
-```
-[INFO] Building LiteX simulation...
-[INFO] Compiling Verilator model...
-...
-[INFO] Simulation running at 10 MHz
-```
-
-**Expected Output** (after boot):
-```
-        __   _ __      _  __
-       / /  (_) /____ | |/_/
-      / /__/ / __/ -_)>  
-     /____/_/\__/\__/_/|_|
-   Build your hardware, easily!
-
- (c) Copyright 2012-2024 Enjoy-Digital
- (c) Copyright 2007-2015 M-Labs
-
-BIOS CRC passed (xxxxxxxx)
-
---=============== SoC ==================--
-CPU:            VexRiscv @ 10MHz
-ROM:            32KB
-SRAM:           4KB
-MAIN-RAM:       100MB
-
-[Client] Starting DTLS client...
-```
-
-**Leave this running** and proceed to Terminal 3.
-
-#### Terminal 3: UART-UDP Bridge
-
-Wait 75 seconds after starting simulation, then:
-
+**Terminal 3 - UART Bridge:**
 ```bash
-python3 uart_udp_bridge.py \
-    --tcp-host 127.0.0.1 \
-    --tcp-port 1234 \
+python3 uart_udp_bridge_chunked.py \
+    --tcp-host 127.0.0.1 --tcp-port 1234 \
     --udp-local-ip 127.0.0.1 \
-    --udp-remote-ip 127.0.0.1 \
-    --udp-remote-port 4444
+    --udp-remote-ip 127.0.0.1 --udp-remote-port 4444
 ```
-
-**Expected Output**:
-```
-════════════════════════════════════════════════════════
-  UART-UDP Bridge
-════════════════════════════════════════════════════════
-
-Configuration:
-  UART (TCP): 127.0.0.1:1234
-  UDP Remote: 127.0.0.1:4444
-
-[Bridge] Connecting to UART...
-[Bridge] ✓ Connected
-[Bridge] Starting packet forwarding...
-[Bridge] Forwarding UART → UDP (245 bytes)
-[Bridge] Forwarding UDP → UART (312 bytes)
-```
-
-**Watch Terminal 1** for handshake completion!
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-pqc-dtls-riscv/
-├── README.md                          # This file
-├── QUICKSTART.txt                     # Quick reference guide
-├── LICENSE                            # MIT License
+PQC-DTLS-RISCV/
 │
-├── Execution Scripts
-│   ├── run_demo.sh                    # ⭐ Main automated demo
-│   ├── build_firmware.sh              # Build RISC-V firmware
-│   ├── build_dtls_firmware.sh         # Alternative build script
-│   ├── install_wolfssl.sh             # Install wolfSSL
-│   ├── generate_pqc_certs.sh          # Generate certificates
-│   ├── cleanup.sh                     # Clean build artifacts
-│   ├── test_pipeline.sh               # Test without DTLS
-│   └── simulate_handshake.py          # Handshake simulator
-│
-├── Core Components
-│   ├── boot/
-│   │   ├── main.c                     # RISC-V client firmware
-│   │   ├── Makefile                   # Firmware build system
-│   │   └── linker.ld                  # Linker script
+├── 📂 Constraint_Env_SimI/Constraint_Env_Sim/    # Main implementation
 │   │
-│   ├── dtls_server/
-│   │   ├── dtls_pqc_server.c          # DTLS server implementation
-│   │   └── Makefile                   # Server build system
+│   ├── 🔧 boot/                                   # RISC-V firmware source
+│   │   ├── main.c                                 # DTLS client implementation
+│   │   ├── Makefile                               # Build configuration
+│   │   └── linker.ld                              # Memory layout
 │   │
-│   └── uart_udp_bridge.py             # UART↔UDP protocol bridge
+│   ├── 🌐 dtls_server/                            # Native DTLS server
+│   │   ├── dtls_pqc_server.c                      # Server implementation
+│   │   └── Makefile                               # Build configuration
+│   │
+│   ├── 🔄 Bridge & Protocol
+│   │   ├── uart_udp_bridge.py                     # Basic bridge
+│   │   ├── uart_udp_bridge_chunked.py             # Chunked protocol bridge
+│   │   ├── chunked_udp_protocol.py                # Protocol implementation
+│   │   └── dtls_server_chunked_wrapper.py         # Server wrapper
+│   │
+│   ├── 🔐 pqc_certs/                              # Generated certificates
+│   │   ├── ca-pub.der
+│   │   ├── server-pub.der / server-key.der
+│   │   └── client-pub.der / client-key.der
+│   │
+│   ├── 📜 Scripts
+│   │   ├── run_demo.sh                            # ⭐ Main demo script
+│   │   ├── build_firmware.sh                      # Build RISC-V binary
+│   │   ├── install_wolfssl.sh                     # Install wolfSSL
+│   │   └── generate_pqc_certs.sh                  # Generate certificates
+│   │
+│   └── 🗂️ Generated Files
+│       ├── boot.bin / boot.elf / boot.fbi         # Firmware binaries
+│       └── logs/                                   # Runtime logs
 │
-├── Configuration
-│   ├── csr.json                       # LiteX CSR configuration
-│   └── wolfssl_config.h               # wolfSSL compile options
+├── 📂 Additional Modules/                          # Supplementary code
+│   ├── main.c                                      # Client reference
+│   ├── user_settings.h                             # wolfSSL config
+│   └── pqc_certs.h                                 # Embedded certificates
 │
-├── Generated Files (after build)
-│   ├── boot.bin                       # Raw firmware binary
-│   ├── boot.elf                       # ELF executable
-│   ├── boot.fbi                       # LiteX bootable image
-│   └── pqc_certs/                     # PQC certificates
-│       ├── ca-dilithium-cert.pem
-│       ├── server-dilithium-cert.pem
-│       ├── server-dilithium-key.pem
-│       ├── client-dilithium-cert.pem
-│       └── client-dilithium-key.pem
+├── 📂 Server Config/                               # Server utilities
+│   ├── dtls_pqc_server.c                           # Server source
+│   └── uart_udp_bridge.py                          # Bridge script
 │
-├── Testing Utilities
-│   └── test_udp_server.py             # Simple UDP echo server
+├── 📂 Evidence/                                    # Demo captures
+│   ├── capture.pcap                                # Packet capture
+│   └── CaptureScreenshot.jpg                       # Visual proof
 │
-└── Documentation
-    └── docs/                          # Additional technical docs
-```
-
-### Directory Purposes
-
-- **`boot/`**: RISC-V bare-metal firmware source code and build system
-- **`dtls_server/`**: Native DTLS server with PQC support
-- **`pqc_certs/`**: Self-signed certificates for demonstration
-- **`logs/`**: Runtime logs from all components (auto-generated)
-
----
-
-## Testing
-
-### Test Communication Pipeline (No DTLS)
-
-Verify the UART-UDP bridge works correctly:
-
-```bash
-./test_pipeline.sh
-```
-
-This runs a simple echo test without cryptography.
-
-**Expected Output**:
-```
-Testing communication pipeline...
-✓ UART → UDP forwarding works
-✓ UDP → UART forwarding works
-✓ Round-trip latency: 12ms
-```
-
-### Manual Testing Tools
-
-#### UDP Echo Server
-```bash
-python3 test_udp_server.py --port 4444
-```
-
-#### Handshake Simulation
-```bash
-python3 simulate_handshake.py --verbose
+├── 📄 Final_Report_82.pdf                          # Technical documentation
+└── 📄 README.md                                    # This file
 ```
 
 ---
 
-## Configuration
-
-### Firmware Configuration (`boot/main.c`)
-
-```c
-#define SERVER_IP "127.0.0.1"
-#define SERVER_PORT 4444
-#define CERT_FILE "pqc_certs/client-dilithium-cert.pem"
-#define KEY_FILE "pqc_certs/client-dilithium-key.pem"
-```
-
-### wolfSSL Configuration (`wolfssl_config.h`)
-
-Key options:
-```c
-#define WOLFSSL_DTLS13                 // Enable DTLS 1.3
-#define HAVE_DILITHIUM                 // Dilithium signatures
-#define WOLFSSL_DILITHIUM_LEVEL 3      // Security level (2/3/5)
-#define HAVE_KYBER                     // ML-KEM key exchange
-#define WOLFSSL_KYBER768               // ML-KEM-768
-#define WOLFSSL_AES_128                // AES-128-GCM
-```
-
-### LiteX Configuration (`csr.json`)
-
-Generated automatically, contains:
-- Memory map (ROM, SRAM, MAIN-RAM)
-- CSR (Control and Status Register) addresses
-- Peripheral configurations
-
-### Security Levels
-
-Choose Dilithium level based on security requirements:
-
-| Level | Classical Security | Key Size | Signature Size |
-|-------|-------------------|----------|----------------|
-| 2     | 128-bit (AES-128) | 2.5 KB   | 2.4 KB         |
-| 3     | 192-bit (AES-192) | 4.0 KB   | 3.3 KB         |
-| 5     | 256-bit (AES-256) | 4.9 KB   | 4.6 KB         |
-
-**Default**: Dilithium3 (NIST Level 3)
-
----
-
-## Performance Metrics
-
-### Simulation Environment
-- **CPU**: RISC-V VexRiscv @ 10 MHz (simulated)
-- **RAM**: 100 MB
-- **Platform**: LiteX + Verilator
+## 📊 Performance Metrics
 
 ### Handshake Performance
 
-| Operation | Simulated Time | Real Hardware (Est.) |
-|-----------|----------------|----------------------|
-| Dilithium Sign | 20-40 ms | 2-4 ms @ 100MHz |
-| Dilithium Verify | 15-30 ms | 1.5-3 ms @ 100MHz |
-| ML-KEM Encapsulate | 10-20 ms | 1-2 ms @ 100MHz |
-| ML-KEM Decapsulate | 10-20 ms | 1-2 ms @ 100MHz |
-| **Full Handshake** | **30-60 seconds** | **<1 second @ 100MHz** |
+| Operation | Simulated (10MHz) | Estimated (100MHz) |
+|-----------|-------------------|-------------------|
+| ML-KEM KeyGen | 20-40 ms | 2-4 ms |
+| ML-KEM Encapsulate | 10-20 ms | 1-2 ms |
+| ML-KEM Decapsulate | 10-20 ms | 1-2 ms |
+| Dilithium Sign | 20-40 ms | 2-4 ms |
+| Dilithium Verify | 15-30 ms | 1.5-3 ms |
+| **Full Handshake** | **30-60 sec** | **<1 sec** |
 
-### Memory Usage
+### Memory Footprint
 
-| Component | Size |
-|-----------|------|
-| Firmware Code | ~400 KB |
-| wolfSSL Library | ~350 KB |
-| PQC Algorithms | ~100 KB |
-| Crypto Buffers | ~100 KB |
-| **Total ROM** | **~420 KB** |
-| **Runtime RAM** | **~2 MB** |
+```
+┌─────────────────────────────────────────────┐
+│           FIRMWARE MEMORY BREAKDOWN          │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Component           │ Size     │ % Total   │
+│  ────────────────────┼──────────┼─────────  │
+│  wolfSSL Library     │ ~350 KB  │ 83%       │
+│  PQC Algorithms      │ ~50 KB   │ 12%       │
+│  Application Code    │ ~15 KB   │ 4%        │
+│  Embedded Certs      │ ~5 KB    │ 1%        │
+│  ────────────────────┼──────────┼─────────  │
+│  TOTAL ROM           │ ~420 KB  │ 100%      │
+│                                             │
+│  Runtime RAM         │ ~2 MB    │           │
+│  (Crypto buffers)                           │
+│                                             │
+└─────────────────────────────────────────────┘
+```
 
-### Throughput
+### Bandwidth Analysis
 
-- **Handshake Overhead**: ~245 KB (client → server)
-- **Application Data**: ~2 KB/s in simulation
-- **Cipher**: AES-128-GCM (hardware accelerated on real devices)
+| Message Type | Size | Chunks (1400B) |
+|--------------|------|----------------|
+| ClientHello | ~1.5 KB | 2 |
+| ServerHello | ~1.2 KB | 1 |
+| Certificate (Dilithium) | ~4.5 KB | 4 |
+| CertificateVerify | ~3.5 KB | 3 |
+| **Total Handshake** | **~15 KB** | **~12** |
 
 ---
 
-## Troubleshooting
+## 🧪 Testing & Verification
 
-### Build Errors
+### Run End-to-End Test
 
-#### Error: `wolfssl/ssl.h: No such file or directory`
+```bash
+cd Constraint_Env_SimI/Constraint_Env_Sim
+python3 test_chunked_e2e.py
+```
 
-**Solution**:
+**Expected Output:**
+```
+================================================================================
+CHUNKED UDP PROTOCOL END-TO-END TEST
+================================================================================
+
+Test 1: Small Message (33 bytes)
+  [SENDER] Msg 0: 33 bytes → 1 chunk
+  [RECEIVER] ✓ Message 0 COMPLETE: 33 bytes reassembled
+  ✓ PASS
+
+Test 2: Medium Message (3000 bytes)
+  [SENDER] Msg 1: 3000 bytes → 3 chunks
+  [RECEIVER] ✓ Message 1 COMPLETE: 3000 bytes reassembled
+  ✓ PASS
+
+Test 3: Large Message (5500 bytes)
+  [SENDER] Msg 2: 5500 bytes → 4 chunks
+  [RECEIVER] ✓ Message 2 COMPLETE: 5500 bytes reassembled
+  ✓ PASS
+
+================================================================================
+RESULTS: 3/3 tests passed
+Stats: {'chunks_received': 8, 'messages_completed': 3, 'crc_errors': 0}
+================================================================================
+```
+
+### Verify Protocol Implementation
+
+```bash
+python3 chunked_udp_protocol.py
+```
+
+### Inspect Packet Captures
+
+```bash
+# Analyze existing captures
+python3 check_reassembly_simple.py
+
+# Create new capture during live demo
+./capture_real_encrypted_traffic.sh
+```
+
+---
+
+## 🔧 Troubleshooting
+
+<details>
+<summary><b>❌ Build Error: wolfssl/ssl.h not found</b></summary>
+
 ```bash
 sudo ldconfig
 ls /usr/local/include/wolfssl/
+
 # If empty, reinstall:
+cd Constraint_Env_SimI/Constraint_Env_Sim
 sudo ./install_wolfssl.sh
 ```
+</details>
 
-#### Error: `riscv64-unknown-elf-gcc: command not found`
+<details>
+<summary><b>❌ Handshake Timeout</b></summary>
 
-**Solution**:
-```bash
-sudo apt-get install gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf
-riscv64-unknown-elf-gcc --version
-```
-
-#### Error: `litex_sim: command not found`
-
-**Solution**:
-```bash
-pip3 install --user litex
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-### Runtime Errors
-
-#### Error: Handshake Timeout
-
-**Diagnosis**:
+1. Verify all components are running:
 ```bash
 ps aux | grep -E "litex_sim|dtls_pqc_server|uart_udp_bridge"
 ```
 
-**Solution**:
-1. Ensure all 3 components are running
-2. Check logs: `tail -f logs/*.log`
-3. Verify port 4444 is free: `sudo netstat -tulpn | grep 4444`
-4. Increase timeout in `run_demo.sh`
-
-#### Error: Bridge Connection Failed
-
-**Solution**:
-1. Wait 75 seconds for simulation to fully boot
-2. Check simulation log: `tail -f logs/litex_sim.log`
-3. Verify TCP port 1234 is available
-
-#### Error: Certificate Verification Failed
-
-**Solution**:
+2. Check port availability:
 ```bash
-# Regenerate certificates
+sudo netstat -tulpn | grep -E "1234|4444"
+```
+
+3. Review logs:
+```bash
+tail -f logs/dtls_server.log
+tail -f logs/uart_bridge.log
+```
+</details>
+
+<details>
+<summary><b>❌ Certificate Verification Failed</b></summary>
+
+```bash
+# Regenerate all certificates
 ./generate_pqc_certs.sh
 
-# Check certificates exist
-ls -lh pqc_certs/*.pem
+# Verify files exist
+ls -la pqc_certs/*.der
 ```
+</details>
 
-### Debugging Commands
+<details>
+<summary><b>❌ Garbled/Corrupted Packets</b></summary>
+
+Ensure you're using the **chunked bridge**, not the simple one:
 
 ```bash
-# View live logs
-tail -f logs/dtls_server.log      # Server activity
-tail -f logs/litex_sim.log        # RISC-V simulation
-tail -f logs/uart_bridge.log      # Bridge packets
+# Use this (with reassembly support):
+python3 uart_udp_bridge_chunked.py ...
 
-# Check process status
-ps aux | grep -E "litex|dtls|bridge"
-
-# Check ports
-sudo netstat -tulpn | grep -E "1234|4444"
-
-# Stop all processes
-pkill -f "litex_sim|dtls_pqc_server|uart_udp_bridge"
-
-# Clean rebuild
-./cleanup.sh
-./build_firmware.sh
-cd dtls_server && make clean && make && cd ..
-./run_demo.sh
+# NOT this (raw forwarding):
+python3 uart_udp_bridge.py ...
 ```
+</details>
 
 ---
 
-## Technical Details
-
-### Cryptographic Algorithms
-
-#### ML-KEM (Module Lattice Key Encapsulation Mechanism)
-- **Type**: Key Exchange
-- **Variant**: ML-KEM-768 (NIST Level 3)
-- **Public Key**: 1,184 bytes
-- **Ciphertext**: 1,088 bytes
-- **Shared Secret**: 32 bytes
-- **Security**: ~192-bit classical equivalent
-
-#### Dilithium (Lattice-based Digital Signature)
-- **Type**: Authentication
-- **Variant**: Dilithium3 (NIST Level 3)
-- **Public Key**: ~1,952 bytes
-- **Signature**: ~3,293 bytes
-- **Security**: ~192-bit classical equivalent
-
-#### AES-128-GCM
-- **Type**: Symmetric Encryption
-- **Key Size**: 128 bits
-- **Mode**: Galois/Counter Mode (authenticated encryption)
-
-### DTLS 1.3 Handshake Flow
-
-```
-Client (RISC-V)                          Server
-      |                                      |
-      |--- ClientHello ------------------>  |
-      |    (ML-KEM public key)              |
-      |                                      |
-      |<-- ServerHello -------------------  |
-      |    (ML-KEM ciphertext)              |
-      |<-- EncryptedExtensions -----------  |
-      |<-- Certificate -------------------  |
-      |    (Dilithium public key)           |
-      |<-- CertificateVerify -------------  |
-      |    (Dilithium signature)            |
-      |<-- Finished ----------------------  |
-      |                                      |
-      |--- Certificate ------------------>  |
-      |    (Dilithium public key)           |
-      |--- CertificateVerify ------------->  |
-      |    (Dilithium signature)            |
-      |--- Finished ---------------------->  |
-      |                                      |
-      |<=== Encrypted Application Data ===>  |
-```
-
-### Memory Map (RISC-V)
-
-```
-0x00000000 - 0x00007FFF : ROM (32 KB)
-0x00008000 - 0x00008FFF : SRAM (4 KB)
-0x40000000 - 0x465FFFFF : MAIN-RAM (100 MB)
-0x82000000 - 0x82001FFF : CSR (peripherals)
-```
-
-### Compiler Flags
-
-```makefile
-CFLAGS = -march=rv32ima -mabi=ilp32 \
-         -O2 -g \
-         -ffunction-sections -fdata-sections \
-         -nostdlib -nostartfiles \
-         -DWOLFSSL_USER_SETTINGS
-
-LDFLAGS = -Wl,--gc-sections \
-          -Wl,-T,linker.ld \
-          -Wl,--no-relax
-```
-
----
-
-## Contributing
-
-We welcome contributions! Please follow these guidelines:
-
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Commit** your changes: `git commit -m 'Add amazing feature'`
-4. **Push** to the branch: `git push origin feature/amazing-feature`
-5. **Open** a Pull Request
-
-### Development Setup
-
-```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/pqc-dtls-riscv.git
-cd pqc-dtls-riscv
-
-# Set up development environment
-./install_wolfssl.sh
-./build_firmware.sh
-
-# Make changes and test
-./run_demo.sh
-```
-
----
-
-## References
+## 📚 References
 
 ### Standards & Specifications
 - [RFC 9147: DTLS 1.3](https://datatracker.ietf.org/doc/rfc9147/)
-- [NIST Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography)
-- [FIPS 203: ML-KEM Standard](https://csrc.nist.gov/pubs/fips/203/final)
+- [NIST FIPS 203: ML-KEM](https://csrc.nist.gov/pubs/fips/203/final)
+- [NIST FIPS 204: ML-DSA (Dilithium)](https://csrc.nist.gov/pubs/fips/204/final)
+- [NIST Post-Quantum Cryptography Project](https://csrc.nist.gov/projects/post-quantum-cryptography)
 
 ### Libraries & Frameworks
 - [wolfSSL Documentation](https://www.wolfssl.com/documentation/)
 - [LiteX Framework](https://github.com/enjoy-digital/litex)
 - [VexRiscv CPU](https://github.com/SpinalHDL/VexRiscv)
 
-### Post-Quantum Algorithms
-- [Dilithium Specification](https://pq-crystals.org/dilithium/)
-- [Kyber/ML-KEM Specification](https://pq-crystals.org/kyber/)
-
-### Academic Papers
-- "Post-Quantum Cryptography for IoT Devices" - IEEE IoT Journal
-- "Efficient Implementation of Lattice-based Cryptography on RISC-V" - IACR ePrint
+### Algorithm Specifications
+- [CRYSTALS-Dilithium](https://pq-crystals.org/dilithium/)
+- [CRYSTALS-Kyber (ML-KEM)](https://pq-crystals.org/kyber/)
 
 ---
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**.
 
 ```
 MIT License
@@ -849,33 +938,46 @@ copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ```
 
 ---
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- **QTrino Labs** - Problem statement and technical guidance
-- **Inter IIT Tech Meet 14.0** - Competition framework
-- **wolfSSL Inc.** - SSL/TLS library with PQC support
-- **Enjoy-Digital** - LiteX SoC framework
-- **NIST** - Post-Quantum Cryptography standardization
+<table>
+<tr>
+<td align="center" width="25%">
+<b>Q-trino Labs</b><br/>
+Problem Statement & Guidance
+</td>
+<td align="center" width="25%">
+<b>Inter IIT Tech Meet 14.0</b><br/>
+Competition Framework
+</td>
+<td align="center" width="25%">
+<b>wolfSSL Inc.</b><br/>
+SSL/TLS Library with PQC
+</td>
+<td align="center" width="25%">
+<b>NIST</b><br/>
+PQC Standardization
+</td>
+</tr>
+</table>
 
 ---
 
-## Support
+<p align="center">
+  <b>Built with ❤️ for the Post-Quantum Era</b>
+</p>
 
-For issues, questions, or contributions:
+<p align="center">
+  <i>Securing IoT devices against tomorrow's quantum threats, today.</i>
+</p>
 
-- **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/pqc-dtls-riscv/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/YOUR_USERNAME/pqc-dtls-riscv/discussions)
-- **Email**: your.email@example.com
-
----
-
-**Built with ❤️ for the Post-Quantum Era**
+<p align="center">
+  <img src="https://img.shields.io/badge/Quantum-Resistant-blueviolet?style=for-the-badge" alt="Quantum Resistant"/>
+  <img src="https://img.shields.io/badge/NIST-Compliant-success?style=for-the-badge" alt="NIST Compliant"/>
+  <img src="https://img.shields.io/badge/Open-Source-blue?style=for-the-badge" alt="Open Source"/>
+</p>
