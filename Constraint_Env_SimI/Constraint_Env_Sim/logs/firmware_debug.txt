@@ -1,0 +1,42 @@
+Timeout
+Executing booted program at 0x40000000
+
+Memory at 0x40000000: 0b00006f 00000013 00000013 00000013
+--============= [1mLiftoff![0m ===============--
+
+========================================
+  RISC-V DTLS 1.3 PQC Demo (ML-KEM-512) 
+========================================
+[DEBUG] main: About to call wolfSSL_Init()
+[DEBUG] wolfSSL_Init returned: 1 (SUCCESS=1)
+[DEBUG] wolfSSL_Init succeeded!
+[DEBUG] Enabling wolfSSL debugging
+[DEBUG] MODE_SERVER=0, calling run_dtls_client()
+
+=== DTLS 1.3 PQC CLIENT MODE ===
+[CLIENT] Step 1: Creating DTLS 1.3 client context
+[CLIENT] Step 2: Context created successfully
+[CLIENT] Step 3: Setting I/O callbacks
+[CLIENT] Step 4: Configuring PQC context
+[Config] PQC Mode: ML-KEM-512 + PSK Authentication
+[CLIENT] Step 5: PQC configured successfully
+[CLIENT] Step 6: Creating SSL object
+[CLIENT] Step 7: SSL object created successfully
+[CLIENT] Step 7a: Setting I/O contexts
+[CLIENT] Step 7b: I/O contexts set
+[CLIENT] Step 8a: Setting NON-BLOCKING mode
+[CLIENT] Step 8b: NON-BLOCKING mode enabled
+[CLIENT] Step 8c: About to set timeout_init
+[CLIENT] Step 8d: timeout_init returned 1
+[CLIENT] Step 8e: About to set timeout_max
+[CLIENT] Step 8f: timeout_max returned 1
+[CLIENT] Step 8g: Testing if wolfSSL_connect hangs...
+[CLIENT] Step 8h: Watchdog initialized
+[CLIENT] Step 9: About to call wolfSSL_connect()
+[Client] Starting DTLS handshake...
+[DIAG] SSL object address: 0x40072270
+[DIAG] CTX object address: 0x40071908
+[CLIENT] *** ABOUT TO CALL wolfSSL_connect() ***
+[CLIENT] If this hangs, wolfSSL_connect never returns
+[ITER 0] PRE-CALL
+

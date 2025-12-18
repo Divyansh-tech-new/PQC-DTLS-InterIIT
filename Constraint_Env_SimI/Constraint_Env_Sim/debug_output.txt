@@ -1,0 +1,25 @@
+RNG_HEALTH_TEST_CHECK_SIZE = 128
+sizeof(seedB_data)         = 128
+opened /dev/urandom.
+rnd read...
+
+--- Generating ca (PQC Root CA) ---
+Generating Key Pair...
+Wrote pqc_certs/ca-key.der (2588 bytes)
+sigOID: 2108914411
+HAVE_DILITHIUM defined. CTC_ML_DSA_LEVEL2: 2108914411
+Wrote pqc_certs/ca-cert.der (3982 bytes)
+
+--- Generating server (PQC Server) ---
+Generating Key Pair...
+Wrote pqc_certs/server-key.der (2588 bytes)
+sigOID: 2108914411
+HAVE_DILITHIUM defined. CTC_ML_DSA_LEVEL2: 2108914411
+Wrote pqc_certs/server-cert.der (3962 bytes)
+
+--- Generating client (PQC Client) ---
+Generating Key Pair...
+Wrote pqc_certs/client-key.der (2588 bytes)
+sigOID: 2108914411
+HAVE_DILITHIUM defined. CTC_ML_DSA_LEVEL2: 2108914411
+Wrote pqc_certs/client-cert.der (3962 bytes)

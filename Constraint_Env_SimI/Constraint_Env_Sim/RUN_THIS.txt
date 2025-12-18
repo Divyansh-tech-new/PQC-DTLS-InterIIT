@@ -1,0 +1,52 @@
+================================================================================
+  FINAL DEMO SCRIPT - RUN THIS
+================================================================================
+
+TO RUN THE COMPLETE DEMONSTRATION:
+
+    cd /path/to/Constraint_Env_Sim
+    ./FINAL_COMPLETE_DEMO.sh
+
+================================================================================
+WHAT THIS DEMONSTRATES:
+================================================================================
+
+✓ Post-Quantum Cryptography (PQC) Implementation
+  - ML-KEM-512 (Kyber) for key exchange
+  - Dilithium for digital signatures
+  
+✓ DTLS 1.3 with PQC Cipher Suites
+
+✓ RISC-V SoC Simulation with LiteX
+
+✓ Complete Encrypted Traffic Capture
+  - View in Wireshark: captures/dtls_pqc_real_encrypted.pcap
+
+✓ End-to-End Verification of Handshake
+
+================================================================================
+OUTPUT FILES:
+================================================================================
+
+  captures/dtls_pqc_real_encrypted.pcap   - Encrypted DTLS traffic with PQC
+  logs/bundled_sim.log                     - Simulation log
+  logs/bundled_server.log                  - Server log
+
+================================================================================
+ALTERNATIVE DEMO SCRIPTS:
+================================================================================
+
+  ./demo_complete_pipeline.sh              - Full pipeline with all components
+  ./demo_simple.sh                         - Simplified demonstration
+  ./test_with_c_helper.sh                  - Test with C helper client
+
+================================================================================
+REQUIREMENTS:
+================================================================================
+
+  - LiteX framework installed
+  - wolfSSL with PQC support
+  - Python 3.x
+  - Standard build tools (gcc, make)
+
+================================================================================

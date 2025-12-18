@@ -1,0 +1,31 @@
+========================================
+  GDB Debug Session for DTLS Firmware
+========================================
+
+[1/3] Starting LiteX simulation with GDB server...
+  Simulation PID: 45387
+  Waiting for GDB stub to initialize...
+
+[2/3] Connecting GDB...
+
+Starting GDB session...
+Commands will be executed from /tmp/gdb_commands.txt
+
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+/tmp/gdb_commands.txt:2: Error in sourced command file:
+localhost:3333: Connection timed out.
+[?2004h(gdb) 

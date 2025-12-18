@@ -1,0 +1,16 @@
+CC = gcc
+CFLAGS = -Wall -O2 -I/usr/local/include
+LDFLAGS = -L/usr/local/lib -lwolfssl -lpthread -lm
+
+TARGET = standalone_bundle_client
+
+all: $(TARGET)
+	@echo "✓ Standalone bundle client built"
+
+$(TARGET): standalone_bundle_client.c
+	$(CC) $(CFLAGS) -o $(TARGET) standalone_bundle_client.c $(LDFLAGS)
+
+clean:
+	rm -f $(TARGET)
+
+.PHONY: all clean

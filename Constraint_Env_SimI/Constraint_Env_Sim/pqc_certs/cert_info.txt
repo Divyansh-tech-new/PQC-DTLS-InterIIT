@@ -1,0 +1,22 @@
+PQC Certificate Generation Summary
+===================================
+
+Generated Keys:
+- CA Key: ca-key.der (Dilithium Level 2 / ML-DSA-44)
+- Server Key: server-key.der (Dilithium Level 2 / ML-DSA-44)
+- Client Key: client-key.der (Dilithium Level 2 / ML-DSA-44)
+
+Public Keys:
+- CA Public: ca-pub.der
+- Server Public: server-pub.der
+- Client Public: client-pub.der
+
+Note: For bare-metal RISC-V, these will be embedded as C byte arrays.
+The authentication uses raw public key mode (RFC 7250) rather than
+full X.509 certificates to save memory.
+
+Signature Algorithm: Dilithium2 (ML-DSA-44)
+- Security Level: NIST Level 2
+- Public Key Size: ~1312 bytes
+- Signature Size: ~2420 bytes
+- Private Key Size: ~2560 bytes
